@@ -1,0 +1,20 @@
+{
+  "implementation": "in_memory_only",
+  "persist_between_reload": false,
+  "initial": {
+    "completed": {
+      "game_01": false,
+      "game_02": false,
+      "game_03": false
+    },
+    "alliance": null,
+    "currentView": "entrance",
+    "musicEnabled": true
+  },
+  "rules": {
+    "max_alliances": 1,
+    "can_play_games_in_any_order": true,
+    "can_replay": true,
+    "all_completed_without_alliance": "show_required_choice_dialog"
+  }
+}

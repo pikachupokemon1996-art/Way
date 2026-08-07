@@ -1,0 +1,57 @@
+{
+  "existing_files": [
+    "references/game_visual_style_reference.png",
+    "games/game_01/crossword_layout_reference.png",
+    "assets/audio/background_music.wav"
+  ],
+  "generate_by_codex": {
+    "entrance": [
+      "entrance_door_background.webp",
+      "order_emblem.png",
+      "entrance_text_frame.png"
+    ],
+    "hall": [
+      "temple_hall_background.webp",
+      "door_symbol_coins.png",
+      "door_symbol_agriculture.png",
+      "door_symbol_bells.png",
+      "hall_text_frame.png",
+      "door_label_frame.png"
+    ],
+    "final": [
+      "final_initiation_background.webp"
+    ],
+    "game_01": [
+      "game1_background_terrace.webp",
+      "game1_abacus_sleeping.png",
+      "game1_bead_white.png",
+      "game1_bead_black.png",
+      "game1_task_frame.png",
+      "game1_praise_frame.png",
+      "game1_scroll_number.png",
+      "game1_crossword_parchment.png",
+      "game1_abacus_awakened.png"
+    ],
+    "game_02": [
+      "game2_learning_garden_background.webp",
+      "game2_farm_background.webp",
+      "game2_card_back.png",
+      "game2_square_perimeter.png",
+      "game2_square_area.png",
+      "game2_rectangle_perimeter.png",
+      "game2_rectangle_area.png",
+      "game2_square_sleeping.png",
+      "game2_square_awakened.png"
+    ],
+    "game_03": [
+      "game3_bell_hall_background.webp",
+      "game3_bell_gold.png",
+      "game3_bell_jade.png",
+      "game3_central_bell_sleeping.png",
+      "game3_central_bell_awakened.png",
+      "game3_probability_dial.png",
+      "game3_dial_pointer.png",
+      "game3_rope.png"
+    ]
+  }
+}

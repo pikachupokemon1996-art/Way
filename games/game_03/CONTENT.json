@@ -1,0 +1,141 @@
+{
+  "game_id": "game_03",
+  "title": "Испытание случая и звона",
+  "probability_scale": [
+    "0",
+    "1/6",
+    "1/3",
+    "1/2",
+    "2/3",
+    "5/6",
+    "1"
+  ],
+  "level_1": {
+    "bell_count": 6,
+    "randomize": false,
+    "penalty": false,
+    "tasks": [
+      {
+        "target": "1/6",
+        "gold_count": 1,
+        "jade_count": 5
+      },
+      {
+        "target": "1/3",
+        "gold_count": 2,
+        "jade_count": 4
+      },
+      {
+        "target": "1/2",
+        "gold_count": 3,
+        "jade_count": 3
+      },
+      {
+        "target": "2/3",
+        "gold_count": 4,
+        "jade_count": 2
+      },
+      {
+        "target": "5/6",
+        "gold_count": 5,
+        "jade_count": 1
+      },
+      {
+        "target": "1",
+        "gold_count": 6,
+        "jade_count": 0
+      }
+    ],
+    "random_ring_after_correct_setup": true,
+    "random_ring_uniform": true
+  },
+  "level_2": {
+    "allowed_mistakes": 1,
+    "failure_on_mistake_number": 2,
+    "randomize": false,
+    "tasks": [
+      {
+        "id": "T1",
+        "bells": [
+          "G",
+          "G",
+          "G",
+          "G",
+          "J",
+          "J"
+        ],
+        "answer": "2/3",
+        "note": "C5"
+      },
+      {
+        "id": "T2",
+        "bells": [
+          "J",
+          "J",
+          "J",
+          "J",
+          "J",
+          "J"
+        ],
+        "answer": "0",
+        "note": "D5"
+      },
+      {
+        "id": "T3",
+        "bells": [
+          "G",
+          "J",
+          "J",
+          "J",
+          "J",
+          "J"
+        ],
+        "answer": "1/6",
+        "note": "E5"
+      },
+      {
+        "id": "T4",
+        "bells": [
+          "G",
+          "G",
+          "G",
+          "J",
+          "J",
+          "J"
+        ],
+        "answer": "1/2",
+        "note": "G5"
+      },
+      {
+        "id": "T5",
+        "bells": [
+          "G",
+          "G",
+          "J",
+          "J",
+          "J",
+          "J"
+        ],
+        "answer": "1/3",
+        "note": "A5"
+      },
+      {
+        "id": "T6",
+        "bells": [
+          "G",
+          "G",
+          "G",
+          "G",
+          "G",
+          "G"
+        ],
+        "answer": "1",
+        "note": "C6"
+      }
+    ]
+  },
+  "artifact": {
+    "type": "central_bell",
+    "name_for_ui": "центральный колокол"
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "game_id": "game_02",
+  "title": "Испытание формы и земли",
+  "level_1": {
+    "type": "triple_card_match",
+    "randomize": false,
+    "cards_per_turn": 3,
+    "fixed_card_order": [
+      "SQ_P_IMAGE",
+      "RECT_S_TEXT",
+      "SQ_S_FORMULA",
+      "RECT_P_IMAGE",
+      "SQ_S_TEXT",
+      "RECT_S_FORMULA",
+      "SQ_P_FORMULA",
+      "RECT_P_TEXT",
+      "SQ_S_IMAGE",
+      "RECT_S_IMAGE",
+      "SQ_P_TEXT",
+      "RECT_P_FORMULA"
+    ],
+    "cards": {
+      "SQ_P_IMAGE": {
+        "group": "square_perimeter",
+        "type": "image"
+      },
+      "SQ_P_TEXT": {
+        "group": "square_perimeter",
+        "type": "text",
+        "content": "Периметр квадрата — сумма длин всех четырёх его сторон."
+      },
+      "SQ_P_FORMULA": {
+        "group": "square_perimeter",
+        "type": "formula",
+        "content": "P = 4a"
+      },
+      "SQ_S_IMAGE": {
+        "group": "square_area",
+        "type": "image"
+      },
+      "SQ_S_TEXT": {
+        "group": "square_area",
+        "type": "text",
+        "content": "Площадь квадрата показывает, сколько места занимает его поверхность."
+      },
+      "SQ_S_FORMULA": {
+        "group": "square_area",
+        "type": "formula",
+        "content": "S = a²"
+      },
+      "RECT_P_IMAGE": {
+        "group": "rectangle_perimeter",
+        "type": "image"
+      },
+      "RECT_P_TEXT": {
+        "group": "rectangle_perimeter",
+        "type": "text",
+        "content": "Периметр прямоугольника — сумма длин всех его сторон."
+      },
+      "RECT_P_FORMULA": {
+        "group": "rectangle_perimeter",
+        "type": "formula",
+        "content": "P = 2(a + b)"
+      },
+      "RECT_S_IMAGE": {
+        "group": "rectangle_area",
+        "type": "image"
+      },
+      "RECT_S_TEXT": {
+        "group": "rectangle_area",
+        "type": "text",
+        "content": "Площадь прямоугольника показывает, сколько места занимает его поверхность."
+      },
+      "RECT_S_FORMULA": {
+        "group": "rectangle_area",
+        "type": "formula",
+        "content": "S = a × b"
+      }
+    }
+  },
+  "level_2": {
+    "allowed_mistakes": 1,
+    "failure_on_mistake_number": 2,
+    "randomize": false,
+    "questions": [
+      {
+        "id": "FARM_01",
+        "scene": "Нужно огородить квадратную грядку со стороной 6 м.",
+        "question": "Сколько метров ограждения понадобится?",
+        "options": [
+          "12 м",
+          "24 м",
+          "36 м"
+        ],
+        "answer": "24 м"
+      },
+      {
+        "id": "FARM_02",
+        "scene": "Для посадки трав нужно подготовить квадратный участок со стороной 7 м.",
+        "question": "Какова площадь участка?",
+        "options": [
+          "28 м²",
+          "49 м²",
+          "14 м²"
+        ],
+        "answer": "49 м²"
+      },
+      {
+        "id": "FARM_03",
+        "scene": "Прямоугольную грядку длиной 8 м и шириной 5 м нужно обнести бортиком.",
+        "question": "Какова общая длина бортика?",
+        "options": [
+          "40 м",
+          "26 м",
+          "13 м"
+        ],
+        "answer": "26 м"
+      },
+      {
+        "id": "FARM_04",
+        "scene": "Поле для рассады имеет длину 9 м и ширину 4 м.",
+        "question": "Какова площадь поля?",
+        "options": [
+          "26 м²",
+          "36 м²",
+          "18 м²"
+        ],
+        "answer": "36 м²"
+      },
+      {
+        "id": "FARM_05",
+        "scene": "На квадратной грядке со стороной 5 м высаживают по одному кусту на каждый квадратный метр.",
+        "question": "Сколько кустов можно посадить?",
+        "options": [
+          "20",
+          "10",
+          "25"
+        ],
+        "answer": "25"
+      },
+      {
+        "id": "FARM_06",
+        "scene": "Для прямоугольного участка длиной 10 м и шириной 6 м готовят верёвку по всей границе.",
+        "question": "Какой длины должна быть верёвка?",
+        "options": [
+          "60 м",
+          "32 м",
+          "16 м"
+        ],
+        "answer": "32 м"
+      }
+    ]
+  },
+  "artifact": {
+    "type": "jade_carpenters_square",
+    "name_for_ui": "нефритовый угольник"
+  }
+}

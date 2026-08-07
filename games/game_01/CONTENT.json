@@ -1,0 +1,221 @@
+{
+  "game_id": "game_01",
+  "level_1": {
+    "mechanic": {
+      "white_beads": "tens",
+      "black_beads": "ones"
+    },
+    "fixed_number_order": [
+      59,
+      24,
+      78,
+      32,
+      17,
+      72,
+      27,
+      40,
+      84,
+      18,
+      56,
+      39,
+      12,
+      43,
+      28,
+      54,
+      22,
+      42,
+      26,
+      36
+    ],
+    "randomize": false
+  },
+  "level_2": {
+    "type": "connected_math_crossword",
+    "lives": 5,
+    "hints": false,
+    "inventory_numbers": [
+      12,
+      17,
+      18,
+      22,
+      24,
+      26,
+      27,
+      28,
+      32,
+      36,
+      39,
+      40,
+      42,
+      43,
+      54,
+      56,
+      59,
+      72,
+      78,
+      84
+    ],
+    "blank_cells": {
+      "TL_NW": 18,
+      "TL_NE": 54,
+      "TL_SE": 27,
+      "TL_SW": 32,
+      "TOP_BRIDGE": 17,
+      "TR_NW": 56,
+      "TR_NE": 28,
+      "TR_SE": 84,
+      "TR_SW": 22,
+      "RIGHT_BRIDGE": 59,
+      "BR_NW": 26,
+      "BR_NE": 78,
+      "BR_SE": 39,
+      "BR_SW": 40,
+      "BOTTOM_BRIDGE": 12,
+      "BL_NW": 24,
+      "BL_NE": 72,
+      "BL_SE": 36,
+      "BL_SW": 42,
+      "LEFT_BRIDGE": 43
+    },
+    "printed_cells": {
+      "TL_N_MID": 3,
+      "TL_E_MID": 2,
+      "TL_S_MID": 5,
+      "TL_W_MID": 14,
+      "TR_N_MID": 2,
+      "TR_E_MID": 3,
+      "TR_S_MID": 62,
+      "TR_W_MID": 34,
+      "BR_N_MID": 3,
+      "BR_E_MID": 2,
+      "BR_S_MID": 1,
+      "BR_W_MID": 14,
+      "BL_N_MID": 48,
+      "BL_E_MID": 2,
+      "BL_S_MID": 6,
+      "BL_W_MID": 18
+    },
+    "bridges": [
+      {
+        "id": "TOP_BRIDGE",
+        "expression": "TL_E_MID × TOP_BRIDGE = TR_W_MID",
+        "resolved": "2 × 17 = 34"
+      },
+      {
+        "id": "RIGHT_BRIDGE",
+        "expression": "TR_S_MID − RIGHT_BRIDGE = BR_N_MID",
+        "resolved": "62 − 59 = 3"
+      },
+      {
+        "id": "BOTTOM_BRIDGE",
+        "expression": "BL_E_MID + BOTTOM_BRIDGE = BR_W_MID",
+        "resolved": "2 + 12 = 14"
+      },
+      {
+        "id": "LEFT_BRIDGE",
+        "expression": "TL_S_MID + LEFT_BRIDGE = BL_N_MID",
+        "resolved": "5 + 43 = 48"
+      }
+    ],
+    "squares": {
+      "TL": [
+        {
+          "side": "north",
+          "expression": "TL_NW × TL_N_MID = TL_NE",
+          "resolved": "18 × 3 = 54"
+        },
+        {
+          "side": "east",
+          "expression": "TL_NE ÷ TL_E_MID = TL_SE",
+          "resolved": "54 ÷ 2 = 27"
+        },
+        {
+          "side": "south",
+          "expression": "TL_SW − TL_S_MID = TL_SE",
+          "resolved": "32 − 5 = 27"
+        },
+        {
+          "side": "west",
+          "expression": "TL_NW + TL_W_MID = TL_SW",
+          "resolved": "18 + 14 = 32"
+        }
+      ],
+      "TR": [
+        {
+          "side": "north",
+          "expression": "TR_NW ÷ TR_N_MID = TR_NE",
+          "resolved": "56 ÷ 2 = 28"
+        },
+        {
+          "side": "east",
+          "expression": "TR_NE × TR_E_MID = TR_SE",
+          "resolved": "28 × 3 = 84"
+        },
+        {
+          "side": "south",
+          "expression": "TR_SW + TR_S_MID = TR_SE",
+          "resolved": "22 + 62 = 84"
+        },
+        {
+          "side": "west",
+          "expression": "TR_NW − TR_W_MID = TR_SW",
+          "resolved": "56 − 34 = 22"
+        }
+      ],
+      "BR": [
+        {
+          "side": "north",
+          "expression": "BR_NW × BR_N_MID = BR_NE",
+          "resolved": "26 × 3 = 78"
+        },
+        {
+          "side": "east",
+          "expression": "BR_NE ÷ BR_E_MID = BR_SE",
+          "resolved": "78 ÷ 2 = 39"
+        },
+        {
+          "side": "south",
+          "expression": "BR_SW − BR_S_MID = BR_SE",
+          "resolved": "40 − 1 = 39"
+        },
+        {
+          "side": "west",
+          "expression": "BR_NW + BR_W_MID = BR_SW",
+          "resolved": "26 + 14 = 40"
+        }
+      ],
+      "BL": [
+        {
+          "side": "north",
+          "expression": "BL_NW + BL_N_MID = BL_NE",
+          "resolved": "24 + 48 = 72"
+        },
+        {
+          "side": "east",
+          "expression": "BL_NE ÷ BL_E_MID = BL_SE",
+          "resolved": "72 ÷ 2 = 36"
+        },
+        {
+          "side": "south",
+          "expression": "BL_SW − BL_S_MID = BL_SE",
+          "resolved": "42 − 6 = 36"
+        },
+        {
+          "side": "west",
+          "expression": "BL_NW + BL_W_MID = BL_SW",
+          "resolved": "24 + 18 = 42"
+        }
+      ]
+    },
+    "wrong_drop": {
+      "lose_life": 1,
+      "return_scroll_to_inventory": true,
+      "reveal_answer": false
+    },
+    "correct_drop": {
+      "lock_scroll": true,
+      "remove_from_inventory": true
+    },
+    "completion_condition": "all_20_blank_cells_correct"
+  }
+}
