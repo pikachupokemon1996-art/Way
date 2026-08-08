@@ -92,7 +92,7 @@ export function mountGame1(container, api) {
         <div class="task-frame image-frame"><img src="${A}game1_task_frame.png" alt=""><div><span>Собери число</span><strong>${current}</strong></div></div>
         <div class="abacus" aria-label="Интерактивные счёты">
           <img class="abacus__body" src="${A}game1_abacus_sleeping.png" alt="Корпус счётов">
-          <div class="abacus__rows" style="translate: 14px 0;>${beadRow('white', tens)}${beadRow('black', ones)}</div>
+          <div class="abacus__rows">${beadRow('white', tens)}${beadRow('black', ones)}</div>
           <div class="abacus__labels"><span>Десятки · белые</span><span>Единицы · чёрные</span></div>
         </div>
         <div class="game-actions"><button class="secondary-button" data-action="reset">Сбросить</button><button class="primary-button" data-action="check">Проверить</button><button class="secondary-button" data-action="return">Вернуться в главный зал</button></div>
