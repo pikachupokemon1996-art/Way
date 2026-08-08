@@ -57,6 +57,14 @@ export function playBell(note = 'C5') {
   tone(frequency * 3.02, 0.28, 'sine', 0.018, 0.025);
 }
 
+export function playMelody(notes = ['C5', 'D5', 'E5', 'G5', 'A5', 'C6']) {
+  notes.forEach((note, index) => {
+    const frequency = noteFrequencies[note] || noteFrequencies.C5;
+    tone(frequency, 0.48, 'sine', 0.095, index * 0.38);
+    tone(frequency * 2.01, 0.3, 'sine', 0.028, index * 0.38 + 0.015);
+  });
+}
+
 export function initAudio() {
   music = document.querySelector('#background-music');
   music.volume = 0.16;

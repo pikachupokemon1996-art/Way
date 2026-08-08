@@ -17,15 +17,19 @@ const cards = {
   RECT_S_FORMULA: { group: 'rectangle_area', type: 'formula', content: 'S = a × b' },
 };
 const questions = [
-  { scene: 'Нужно огородить квадратную грядку со стороной 6 м.', question: 'Сколько метров ограждения понадобится?', options: ['12 м', '24 м', '36 м'], answer: '24 м' },
-  { scene: 'Для посадки трав нужно подготовить квадратный участок со стороной 7 м.', question: 'Какова площадь участка?', options: ['28 м²', '49 м²', '14 м²'], answer: '49 м²' },
-  { scene: 'Прямоугольную грядку длиной 8 м и шириной 5 м нужно обнести бортиком.', question: 'Какова общая длина бортика?', options: ['40 м', '26 м', '13 м'], answer: '26 м' },
-  { scene: 'Поле для рассады имеет длину 9 м и ширину 4 м.', question: 'Какова площадь поля?', options: ['26 м²', '36 м²', '18 м²'], answer: '36 м²' },
-  { scene: 'На квадратной грядке со стороной 5 м высаживают по одному кусту на каждый квадратный метр.', question: 'Сколько кустов можно посадить?', options: ['20', '10', '25'], answer: '25' },
-  { scene: 'Для прямоугольного участка длиной 10 м и шириной 6 м готовят верёвку по всей границе.', question: 'Какой длины должна быть верёвка?', options: ['60 м', '32 м', '16 м'], answer: '32 м' },
+  { text: 'Старший садовник велел оградить квадратную грядку со стороной 6 м. Сколько метров ограды потребуется, чтобы окружить её по всему краю?', options: ['12 м', '24 м', '36 м'], answer: '24 м' },
+  { text: 'На рассвете ученикам поручили подготовить квадратный участок со стороной 7 м для душистых трав. Какова площадь этой земли?', options: ['28 м²', '49 м²', '14 м²'], answer: '49 м²' },
+  { text: 'Вдоль прямоугольной грядки длиной 8 м и шириной 5 м нужно уложить прочный бортик. Какова его общая длина?', options: ['40 м', '26 м', '13 м'], answer: '26 м' },
+  { text: 'Для молодой рассады отвели прямоугольный участок длиной 9 м и шириной 4 м. Какова площадь участка?', options: ['26 м²', '36 м²', '18 м²'], answer: '36 м²' },
+  { text: 'На квадратной грядке со стороной 5 м высаживают по одному кусту на каждый квадратный метр. Сколько кустов сможет принять грядка?', options: ['20', '10', '25'], answer: '25' },
+  { text: 'Перед вечерним поливом нужно протянуть верёвку по всей границе прямоугольного участка длиной 10 м и шириной 6 м. Какой длины должна быть верёвка?', options: ['60 м', '32 м', '16 м'], answer: '32 м' },
+];
+const progressGroups = [
+  ['square_perimeter', 'square'], ['square_area', 'square'], ['rectangle_perimeter', 'rectangle'], ['rectangle_area', 'rectangle'],
 ];
 
 export function mountGame2(container, api) {
+  let active = true;
   let opened = [];
   let matched = new Set();
   let busy = false;
@@ -68,7 +72,7 @@ export function mountGame2(container, api) {
   function renderCards(message = '') {
     container.innerHTML = `
       <section class="scene game-scene game2-scene game2-cards">
-        <header class="game-header"><div><p class="eyebrow">Уровень 1 · обучение</p><h1>Собери тройку</h1></div><span class="progress-chip">Найдено: ${matched.size}/4</span></header>
+        <header class="game-header"><div><p class="eyebrow">Уровень 1 · обучение</p><h1>Собери тройку</h1></div><div class="shape-progress" aria-label="Найдено ${matched.size} из 4">${progressGroups.map(([group, shape]) => `<span class="shape-progress__${shape} ${matched.has(group) ? 'is-found' : ''}"></span>`).join('')}<small>${matched.size}/4</small></div></header>
         <div class="card-grid" aria-label="12 карточек">
           ${order.map((id) => {
             const isOpen = opened.includes(id) || matched.has(cards[id].group);
@@ -80,8 +84,10 @@ export function mountGame2(container, api) {
           }).join('')}
         </div>
         <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
+        <button type="button" class="level-return-button" data-action="return">Вернуться в главный зал</button>
       </section>`;
     container.querySelectorAll('.learning-card:not(:disabled)').forEach((element) => element.addEventListener('click', () => openCard(element.dataset.card)));
+    container.querySelector('[data-action="return"]').addEventListener('click', () => leave(false));
   }
 
   function openCard(id) {
@@ -97,6 +103,7 @@ export function mountGame2(container, api) {
     const group = cards[opened[0]].group;
     const correct = opened.every((id) => cards[id].group === group);
     setTimeout(() => {
+      if (!active) return;
       if (correct) {
         matched.add(group);
         playEffect('correct');
@@ -121,11 +128,11 @@ export function mountGame2(container, api) {
     });
   }
 
-  function showFarmInstructions() {
+  function showFarmInstructions(continueCurrent = false) {
     api.modal({
       title: 'Помоги на участке',
       body: '<p>Реши 6 практических задач и выбирай один из трёх ответов.</p><p>Ошибиться можно только один раз. <strong>Вторая ошибка начнёт этот этап заново</strong>, но карточки повторять не придётся.</p>',
-      actions: [{ label: 'Начать работу', primary: true, onClick: startFarm }],
+      actions: [{ label: continueCurrent ? 'Продолжить' : 'Начать работу', primary: true, onClick: continueCurrent ? () => renderFarm() : startFarm }],
     });
   }
 
@@ -140,15 +147,30 @@ export function mountGame2(container, api) {
     const item = questions[questionIndex];
     container.innerHTML = `
       <section class="scene game-scene game2-farm">
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact" data-action="give-up">Отказаться от испытания</button></div>
         <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Помоги на участке</h1></div><span class="progress-chip">Задача ${questionIndex + 1}/6</span></header>
-        <div class="farm-improvements" aria-hidden="true">${Array.from({ length: 6 }, (_, index) => `<img class="farm-improvement farm-improvement--${index + 1} ${index < progress ? 'is-grown' : ''}" src="${A}door_symbol_agriculture.png" alt="">`).join('')}</div>
+        <div class="farm-improvements" aria-label="Улучшения хозяйства">
+          <span class="farm-improvement farm-improvement--fence ${progress >= 1 ? 'is-grown' : ''}" aria-label="Ограда"></span>
+          <span class="farm-improvement farm-improvement--grass ${progress >= 2 ? 'is-grown' : ''}" aria-label="Созревшая зелень"></span>
+          <span class="farm-improvement farm-improvement--border ${progress >= 3 ? 'is-grown' : ''}" aria-label="Бортик"></span>
+          <span class="farm-improvement farm-improvement--seedlings ${progress >= 4 ? 'is-grown' : ''}" aria-label="Подросшая рассада"></span>
+          <span class="farm-improvement farm-improvement--bushes ${progress >= 5 ? 'is-grown' : ''}" aria-label="Кусты"></span>
+          <span class="farm-improvement farm-improvement--rope ${progress >= 6 ? 'is-grown' : ''}" aria-label="Верёвочная ограда"></span>
+        </div>
         <div class="ornate-panel farm-task">
-          <p>${item.scene}</p><h2>${item.question}</h2>
+          <h2>${item.text}</h2>
           <div class="answer-grid">${item.options.map((option) => `<button type="button" class="answer-button" data-answer="${option}">${option}</button>`).join('')}</div>
           <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
         </div>
       </section>`;
     container.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => answerFarm(button.dataset.answer)));
+    container.querySelector('[data-action="instructions"]').addEventListener('click', () => showFarmInstructions(true));
+    container.querySelector('[data-action="give-up"]').addEventListener('click', () => leave(true));
+  }
+
+  function leave(shouldBlock) {
+    active = false;
+    api.returnToHall('game_02', shouldBlock);
   }
 
   function answerFarm(answer) {
@@ -157,8 +179,12 @@ export function mountGame2(container, api) {
       playEffect('correct');
       progress += 1;
       questionIndex += 1;
-      if (questionIndex >= questions.length) setTimeout(showArtifact, 450);
-      else renderFarm('Верно. Участок становится лучше.');
+      if (questionIndex >= questions.length) {
+        container.querySelector('.farm-improvement--rope')?.classList.add('is-grown');
+        const feedback = container.querySelector('.farm-task .feedback');
+        if (feedback) { feedback.textContent = 'Верно. Хозяйство полностью восстановлено.'; feedback.classList.add('is-visible'); }
+        setTimeout(() => { if (active) showArtifact(); }, 900);
+      } else renderFarm('Верно. Участок становится лучше.');
       return;
     }
     errors += 1;

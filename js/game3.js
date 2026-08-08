@@ -1,10 +1,14 @@
-import { playBell, playEffect } from './audio.js';
+import { playBell, playEffect, playMelody } from './audio.js';
 
 const A = './assets/generated/';
 const scale = ['0', '1/6', '1/3', '1/2', '2/3', '5/6', '1'];
 const level1Tasks = [
-  { target: '1/6', gold: 1 }, { target: '1/3', gold: 2 }, { target: '1/2', gold: 3 },
-  { target: '2/3', gold: 4 }, { target: '5/6', gold: 5 }, { target: '1', gold: 6 },
+  { target: '1/6', gold: 1, instruction: 'Сделай 1 золотой колокол из 6. Остальные 5 — нефритовые.' },
+  { target: '1/3', gold: 2, instruction: 'Сделай 2 золотых колокола из 6. Остальные 4 — нефритовые.' },
+  { target: '1/2', gold: 3, instruction: 'Сделай 3 золотых колокола из 6. Остальные 3 — нефритовые.' },
+  { target: '2/3', gold: 4, instruction: 'Сделай 4 золотых колокола из 6. Остальные 2 — нефритовые.' },
+  { target: '5/6', gold: 5, instruction: 'Сделай 5 золотых колоколов из 6. Остался 1 нефритовый.' },
+  { target: '1', gold: 6, instruction: 'Сделай все 6 колоколов золотыми.' },
 ];
 const level2Tasks = [
   { bells: ['G', 'G', 'G', 'G', 'J', 'J'], answer: '2/3', note: 'C5' },
@@ -19,11 +23,12 @@ function bellsMarkup(states, ringing = -1, interactive = true) {
   return `<div class="bell-row" aria-label="Шесть колоколов">${states.map((state, index) => `
     <button type="button" class="small-bell ${ringing === index ? 'is-ringing' : ''}" data-bell="${index}" ${interactive ? '' : 'disabled'} aria-label="Колокол ${index + 1}: ${state === 'G' ? 'золотой' : 'нефритовый'}">
       <img src="${A}game3_bell_${state === 'G' ? 'gold' : 'jade'}.png" alt="">
-      <span>${state === 'G' ? 'GOLD' : 'JADE'}</span>
+      <span>${state === 'G' ? 'ЗОЛОТОЙ' : 'НЕФРИТОВЫЙ'}</span>
     </button>`).join('')}</div>`;
 }
 
 export function mountGame3(container, api) {
+  let active = true;
   let taskIndex = 0;
   let bells = Array(6).fill('J');
   let readyToRing = false;
@@ -31,6 +36,14 @@ export function mountGame3(container, api) {
   let lessonShown = false;
   let errors = 0;
   let dialIndex = 0;
+
+  function showLevel1Instructions(shouldStart = false) {
+    api.modal({
+      title: 'Создай вероятность',
+      body: '<p>Перед тобой 6 колоколов. Кликом меняй каждый: <strong>золотой или нефритовый</strong>.</p><p>Настрой состав под заданную вероятность. После правильной настройки дёрни шнур: случайно прозвучит один из шести колоколов.</p><p>Результат звона не бывает правильным или неправильным — это случайный исход.</p>',
+      actions: [{ label: shouldStart ? 'Начать' : 'Продолжить', primary: true, onClick: shouldStart ? startLevel1 : () => renderLevel1() }],
+    });
+  }
 
   function intro() {
     container.innerHTML = `
@@ -42,11 +55,7 @@ export function mountGame3(container, api) {
       </div></section>`;
     container.querySelector('[data-action="start"]').addEventListener('click', () => {
       playEffect('click');
-      api.modal({
-        title: 'Создай вероятность',
-        body: '<p>Перед тобой 6 колоколов. Кликом меняй каждый: <strong>золотой или нефритовый</strong>.</p><p>Настрой состав под заданную вероятность. После правильной настройки дёрни шнур: случайно прозвучит один из шести колоколов.</p><p>Результат звона не бывает правильным или неправильным — это случайный исход.</p>',
-        actions: [{ label: 'Начать', primary: true, onClick: startLevel1 }],
-      });
+      showLevel1Instructions(true);
     });
   }
 
@@ -62,8 +71,9 @@ export function mountGame3(container, api) {
     const task = level1Tasks[taskIndex];
     container.innerHTML = `
       <section class="scene game-scene game3-scene game3-level1">
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button></div>
         <header class="game-header"><div><p class="eyebrow">Уровень 1 · обучение</p><h1>Создай вероятность</h1></div><span class="progress-chip">Настройка ${taskIndex + 1}/6</span></header>
-        <div class="probability-task ornate-panel"><span>Вероятность золотого звона</span><strong>${task.target}</strong><small>${task.gold} золотых из 6</small></div>
+        <div class="probability-task ornate-panel"><span>Вероятность золотого звона</span><strong>${task.target}</strong><small>${task.instruction}</small></div>
         ${bellsMarkup(bells, ringing, true)}
         <div class="game-actions">
           <button type="button" class="primary-button" data-action="check" ${readyToRing ? 'disabled' : ''}>Проверить настройку</button>
@@ -71,10 +81,13 @@ export function mountGame3(container, api) {
         </div>
         <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
         ${lessonShown ? '<p class="lesson-note">Вероятность говорит о шансе, а не предсказывает будущее.</p>' : ''}
+        <button type="button" class="level-return-button" data-action="return">Вернуться в главный зал</button>
       </section>`;
     container.querySelectorAll('[data-bell]').forEach((button) => button.addEventListener('click', () => toggleBell(Number(button.dataset.bell))));
     container.querySelector('[data-action="check"]').addEventListener('click', checkSetup);
     container.querySelector('[data-action="ring"]')?.addEventListener('click', ringRandomBell);
+    container.querySelector('[data-action="instructions"]').addEventListener('click', () => showLevel1Instructions(false));
+    container.querySelector('[data-action="return"]').addEventListener('click', () => leave(false));
   }
 
   function toggleBell(index) {
@@ -104,6 +117,7 @@ export function mountGame3(container, api) {
     lessonShown = true;
     renderLevel1(`Случайно прозвучал ${bells[ringing] === 'G' ? 'золотой' : 'нефритовый'} колокол. Это не ошибка.`);
     setTimeout(() => {
+      if (!active) return;
       ringing = -1;
       readyToRing = false;
       taskIndex += 1;
@@ -115,11 +129,11 @@ export function mountGame3(container, api) {
     }, 950);
   }
 
-  function showLevel2Instructions() {
+  function showLevel2Instructions(continueCurrent = false) {
     api.modal({
       title: 'Услышь закономерность',
       body: '<p>Теперь состав колоколов задаёт испытание. Определи вероятность золотого звона и поверни круг вероятности на нужное значение.</p><p>Ошибиться можно только один раз. Вторая ошибка начнёт заново только этот этап.</p>',
-      actions: [{ label: 'Начать', primary: true, onClick: startLevel2 }],
+      actions: [{ label: continueCurrent ? 'Продолжить' : 'Начать', primary: true, onClick: continueCurrent ? () => renderLevel2() : startLevel2 }],
     });
   }
 
@@ -143,12 +157,12 @@ export function mountGame3(container, api) {
     const task = level2Tasks[taskIndex];
     container.innerHTML = `
       <section class="scene game-scene game3-scene game3-level2">
-        <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Услышь закономерность</h1></div><span class="progress-chip">Нота ${taskIndex + 1}/6</span></header>
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact" data-action="give-up">Отказаться от испытания</button></div>
+        <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Услышь закономерность</h1></div><div class="note-progress" aria-label="Собрано нот">${Array.from({ length: 6 }, (_, index) => `<span class="${index < taskIndex ? 'is-played' : ''}">♪</span>`).join('')}</div></header>
         <div class="bell-question"><h2>Какова вероятность золотого звона?</h2>${bellsMarkup(task.bells, -1, false)}</div>
         ${dialMarkup()}
         <button class="primary-button dial-check" data-action="check">Проверить</button>
         <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
-        <div class="melody-progress" aria-label="Собрано нот">${Array.from({ length: 6 }, (_, index) => `<span class="${index < taskIndex ? 'is-played' : ''}">♪</span>`).join('')}</div>
       </section>`;
     const dial = container.querySelector('[data-dial]');
     dial.addEventListener('click', selectDialFromPointer);
@@ -162,6 +176,13 @@ export function mountGame3(container, api) {
       container.querySelector('[data-dial]').focus();
     });
     container.querySelector('[data-action="check"]').addEventListener('click', checkDial);
+    container.querySelector('[data-action="instructions"]').addEventListener('click', () => showLevel2Instructions(true));
+    container.querySelector('[data-action="give-up"]').addEventListener('click', () => leave(true));
+  }
+
+  function leave(shouldBlock) {
+    active = false;
+    api.returnToHall('game_03', shouldBlock);
   }
 
   function selectDialFromPointer(event) {
@@ -182,7 +203,13 @@ export function mountGame3(container, api) {
       playEffect('correct');
       taskIndex += 1;
       dialIndex = 0;
-      if (taskIndex >= level2Tasks.length) setTimeout(showArtifact, 700);
+      if (taskIndex >= level2Tasks.length) {
+        container.querySelector('.note-progress span:last-child')?.classList.add('is-played');
+        const feedback = container.querySelector('.feedback');
+        if (feedback) { feedback.textContent = 'Верно. Шесть нот собраны в мелодию.'; feedback.classList.add('is-visible'); }
+        setTimeout(() => { if (active) playMelody(level2Tasks.map((item) => item.note)); }, 350);
+        setTimeout(() => { if (active) showArtifact(); }, 2850);
+      }
       else renderLevel2('Верно. Нота вошла в мелодию.');
       return;
     }

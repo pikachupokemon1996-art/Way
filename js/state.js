@@ -1,5 +1,6 @@
 export const initialState = Object.freeze({
   completed: { game_01: false, game_02: false, game_03: false },
+  blocked: { game_01: false, game_02: false, game_03: false },
   alliance: null,
   currentView: 'entrance',
   musicEnabled: true,
@@ -7,6 +8,7 @@ export const initialState = Object.freeze({
 
 const cloneInitial = () => ({
   completed: { ...initialState.completed },
+  blocked: { ...initialState.blocked },
   alliance: initialState.alliance,
   currentView: initialState.currentView,
   musicEnabled: initialState.musicEnabled,
@@ -28,6 +30,10 @@ export function setMusicEnabled(enabled) {
 
 export function completeGame(gameId) {
   state.completed[gameId] = true;
+}
+
+export function blockGame(gameId) {
+  state.blocked[gameId] = true;
 }
 
 export function chooseAlliance(gameId) {

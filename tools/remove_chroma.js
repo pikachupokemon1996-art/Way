@@ -120,7 +120,8 @@ function removeChroma(file) {
     const g = pixels[source + 1];
     const b = pixels[source + 2];
     const distance = Math.hypot(r - key[0], g - key[1], b - key[2]);
-    const alpha = distance <= 42 ? 0 : distance >= 135 ? 255 : Math.round((distance - 42) / 93 * 255);
+    const greenScreen = g > 165 && g > r * 1.55 && g > b * 1.55;
+    const alpha = greenScreen ? 0 : distance <= 42 ? 0 : distance >= 135 ? 255 : Math.round((distance - 42) / 93 * 255);
     rgba[target] = r;
     rgba[target + 1] = g;
     rgba[target + 2] = b;

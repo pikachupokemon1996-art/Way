@@ -76,6 +76,52 @@ check(source.includes('Выбрать можно только одного хр�
 check(source.includes('Ты принят в ученики.'), 'final title');
 check(source.includes('Исток ещё впереди. Это только начало пути.'), 'final body');
 
+// Second-pass patch checks (PATCH_SINGULARIS_2026-08-08).
+const overrides = readJson('PATCH_SINGULARIS_2026-08-08/CONTENT_OVERRIDES.json');
+const appSource = read('js/app.js');
+const stateSource = read('js/state.js');
+const game1Source = read('js/game1.js');
+const game2Source = read('js/game2.js');
+const game3Source = read('js/game3.js');
+const cssSource = read('css/styles.css');
+const sealSource = read('assets/generated/game1_math_seal.svg');
+
+for (const asset of ['entrance_join_button_full.png', 'hall_choose_guardian_banner.png', 'hall_leave_button_full.png']) {
+  const file = path.join(root, 'assets', 'generated', asset);
+  const bytes = fs.readFileSync(file);
+  check(bytes[25] === 6, `${asset} has alpha channel`);
+  check(appSource.includes(`./assets/generated/`) && appSource.includes(asset), `${asset} is connected`);
+}
+check(!/image-cta[^]*?<span>Присоединиться к Ордену<\/span>/.test(appSource), 'entrance generated CTA has no visible HTML overlay');
+check(appSource.includes('hall_choose_guardian_banner.png') && !appSource.includes('hall_text_frame.png'), 'hall uses short generated banner');
+check(overrides.hall.bottom_instructions.every((line) => appSource.includes(line)), 'hall bottom instructions match overrides');
+check(stateSource.includes('blocked: { game_01: false, game_02: false, game_03: false }'), 'in-memory blocked state');
+check(!stateSource.includes('localStorage') && appSource.includes('blockGame(gameId)'), 'blocked state is session-only and wired');
+check(appSource.includes("blocked ? 'disabled' : ''"), 'blocked door is disabled');
+
+check((game1Source.match(/\['(?:TL|TR|BL|BR|TOP|RIGHT|BOTTOM|LEFT)[A-Z_]*'/g) || []).length >= 20, 'game1 has 20 seal slot definitions');
+check(game1Source.includes('game1_math_seal.svg') && sealSource.includes('2 +') && sealSource.includes('= 14'), 'game1 exact static SVG seal is connected');
+check(game1Source.includes('Array.from({ length: 5 }') && game1Source.includes('life-coin'), 'game1 renders five attempt coins');
+check(game1Source.includes("data-action=\"hint\"") && game1Source.includes('Math.floor(Math.random() * empty.length)'), 'game1 one random hint');
+check(game1Source.includes('leave(false)') && game1Source.includes('leave(true)') && game1Source.includes("api.returnToHall('game_01', shouldBlock)"), 'game1 return and surrender behaviors');
+check(cssSource.includes('transform: rotate(90deg)') && cssSource.includes('.scroll-inventory'), 'game1 bead rotation and inventory styling');
+
+check(overrides.game2.level2.tasks.every((task) => game2Source.includes(task.text)), 'game2 exact patched task texts');
+check(overrides.game2.level2.tasks.every((task) => task.options.every((option) => game2Source.includes(option))), 'game2 options preserved');
+check(['fence', 'grass', 'border', 'seedlings', 'bushes', 'rope'].every((kind) => game2Source.includes(`farm-improvement--${kind}`)), 'game2 six distinct farm improvements');
+check(game2Source.includes('progressGroups') && game2Source.includes('shape-progress'), 'game2 geometry progress icons');
+check(game2Source.includes('leave(false)') && game2Source.includes('leave(true)') && game2Source.includes("api.returnToHall('game_02', shouldBlock)"), 'game2 return and refusal behaviors');
+
+check(overrides.game3.level1.tasks.every((task) => game3Source.includes(task.instruction)), 'game3 exact probability instructions');
+check(game3Source.includes("'ЗОЛОТОЙ' : 'НЕФРИТОВЫЙ'"), 'game3 Russian bell labels');
+check(!game3Source.includes('melody-progress') && !game3Source.includes('Нота ${taskIndex'), 'game3 removed old note progress UI');
+check(game3Source.includes('note-progress') && game3Source.includes('leave(true)') && game3Source.includes("api.returnToHall('game_03', shouldBlock)"), 'game3 top notes and refusal behavior');
+check(game3Source.includes('playMelody(level2Tasks.map'), 'game3 final six-note melody');
+
+for (const file of ['index.html', 'css/styles.css', 'js/app.js', 'js/audio.js', 'js/state.js', 'js/game1.js', 'js/game2.js', 'js/game3.js']) {
+  check(!/\b(?:src|href)=["']\//.test(read(file)), `${file} uses no root-absolute asset paths`);
+}
+
 console.log(`QA checks: ${checks.length}; passed: ${checks.length - failures.length}; failed: ${failures.length}`);
 if (failures.length) {
   for (const failure of failures) console.error(`FAIL: ${failure}`);

@@ -36,17 +36,16 @@ function slot(id) {
   return `<button type="button" class="crossword-slot" data-slot="${id}" aria-label="Пустая клетка ${id}">?</button>`;
 }
 
-function block(id, labels) {
-  return `<div class="math-block math-block--${id.toLowerCase()}">
-    ${slot(`${id}_NW`)}${slot(`${id}_NE`)}${slot(`${id}_SE`)}${slot(`${id}_SW`)}
-    <span class="edge edge--north">${labels.north}</span>
-    <span class="edge edge--east">${labels.east}</span>
-    <span class="edge edge--south">${labels.south}</span>
-    <span class="edge edge--west">${labels.west}</span>
-  </div>`;
-}
+const sealSlots = [
+  ['TL_NW', 13.75, 17.65], ['TL_NE', 34.58, 17.65], ['TL_SE', 34.58, 44.12], ['TL_SW', 13.75, 44.12],
+  ['TR_NW', 65.42, 17.65], ['TR_NE', 86.25, 17.65], ['TR_SE', 86.25, 44.12], ['TR_SW', 65.42, 44.12],
+  ['BL_NW', 13.75, 55.88], ['BL_NE', 34.58, 55.88], ['BL_SE', 34.58, 82.35], ['BL_SW', 13.75, 82.35],
+  ['BR_NW', 65.42, 55.88], ['BR_NE', 86.25, 55.88], ['BR_SE', 86.25, 82.35], ['BR_SW', 65.42, 82.35],
+  ['TOP_BRIDGE', 50, 30.88], ['RIGHT_BRIDGE', 75.83, 50], ['BOTTOM_BRIDGE', 50, 69.12], ['LEFT_BRIDGE', 24.17, 50],
+];
 
 export function mountGame1(container, api) {
+  let active = true;
   let level = 0;
   let taskIndex = 0;
   let tens = 0;
@@ -56,6 +55,7 @@ export function mountGame1(container, api) {
   let lives = 5;
   let placed = {};
   let selected = null;
+  let hintUsed = false;
 
   function renderIntro() {
     level = 0;
@@ -87,14 +87,15 @@ export function mountGame1(container, api) {
     const current = numbers[taskIndex];
     container.innerHTML = `
       <section class="scene game-scene game1-scene game1-level1">
-        <header class="game-header"><div><p class="eyebrow">Уровень 1 · обучение</p><h1>Счёты</h1></div><button class="secondary-button compact" data-action="instructions">Инструкция</button></header>
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button></div>
+        <header class="game-header"><div><p class="eyebrow">Уровень 1 · обучение</p><h1>Счёты</h1></div></header>
         <div class="task-frame image-frame"><img src="${A}game1_task_frame.png" alt=""><div><span>Собери число</span><strong>${current}</strong></div></div>
         <div class="abacus" aria-label="Интерактивные счёты">
           <img class="abacus__body" src="${A}game1_abacus_sleeping.png" alt="Корпус счётов">
           <div class="abacus__rows">${beadRow('white', tens)}${beadRow('black', ones)}</div>
           <div class="abacus__labels"><span>Десятки · белые</span><span>Единицы · чёрные</span></div>
         </div>
-        <div class="game-actions"><button class="secondary-button" data-action="reset">Сбросить</button><button class="primary-button" data-action="check">Проверить</button></div>
+        <div class="game-actions"><button class="secondary-button" data-action="reset">Сбросить</button><button class="primary-button" data-action="check">Проверить</button><button class="secondary-button" data-action="return">Вернуться в главный зал</button></div>
         <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
         <aside class="scroll-inventory"><h2>Найденные свитки <span>${found.length}/20</span></h2><div class="scroll-grid">${found.map((number) => scroll(number)).join('')}</div></aside>
         <div class="praise-pop" hidden></div>
@@ -120,6 +121,7 @@ export function mountGame1(container, api) {
     });
     container.querySelector('[data-action="check"]').addEventListener('click', checkLevel1);
     container.querySelector('[data-action="instructions"]').addEventListener('click', showInstructions1);
+    container.querySelector('[data-action="return"]').addEventListener('click', () => leave(false));
   }
 
   function checkLevel1() {
@@ -139,6 +141,7 @@ export function mountGame1(container, api) {
     praise.innerHTML = `<img src="${A}game1_praise_frame.png" alt=""><div><strong>${praises[taskIndex % praises.length]}</strong><span>Число ${expected} найдено.</span></div>`;
     praise.hidden = false;
     setTimeout(() => {
+      if (!active) return;
       busy = false;
       taskIndex += 1;
       tens = 0;
@@ -156,11 +159,11 @@ export function mountGame1(container, api) {
     });
   }
 
-  function showInstructions2() {
+  function showInstructions2(continueCurrent = false) {
     api.modal({
       title: 'Как восстановить печать',
-      body: '<p>Перед тобой связанный математический кроссворд. Перетаскивай 20 свитков в пустые клетки. Угловые числа одновременно участвуют в двух выражениях.</p><p>На этом этапе подсказок по ответам нет. У тебя <strong>5 попыток</strong>; неверный свиток возвращается в инвентарь.</p>',
-      actions: [{ label: 'Начать', primary: true, onClick: startLevel2 }],
+      body: '<p>Перед тобой связанный математический кроссворд. Перетаскивай 20 свитков в пустые клетки. Угловые числа одновременно участвуют в двух выражениях.</p><p>У тебя <strong>5 попыток</strong>; неверный свиток возвращается в инвентарь. Одну клетку можно заполнить кнопкой «Подсказка» без потери попытки.</p>',
+      actions: [{ label: continueCurrent ? 'Продолжить' : 'Начать', primary: true, onClick: continueCurrent ? () => renderLevel2() : startLevel2 }],
     });
   }
 
@@ -169,6 +172,7 @@ export function mountGame1(container, api) {
     lives = 5;
     placed = {};
     selected = null;
+    hintUsed = false;
     renderLevel2();
   }
 
@@ -176,23 +180,15 @@ export function mountGame1(container, api) {
     const available = inventory.filter((number) => !Object.values(placed).includes(number));
     container.innerHTML = `
       <section class="scene game-scene game1-scene game1-level2">
-        <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Математическая печать</h1></div><div class="attempts">Попытки: <strong>${lives}</strong></div></header>
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact" data-action="hint" ${hintUsed ? 'disabled' : ''}>Подсказка</button></div>
+        <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Математическая печать</h1></div><div class="life-coins" aria-label="Осталось попыток: ${lives}">${Array.from({ length: 5 }, (_, index) => `<span class="life-coin ${index < lives ? 'is-active' : ''}" aria-hidden="true">◇</span>`).join('')}</div></header>
         <div class="crossword-shell">
-          <img src="${A}game1_crossword_parchment.png" alt="" class="crossword-parchment">
-          <div class="crossword-map">
-            ${block('TL', { north: '× 3 =', east: '÷ 2 =', south: '− 5 =', west: '+ 14 =' })}
-            <div class="bridge bridge--top"><span>2 ×</span>${slot('TOP_BRIDGE')}<span>= 34</span></div>
-            ${block('TR', { north: '÷ 2 =', east: '× 3 =', south: '+ 62 =', west: '− 34 =' })}
-            <div class="bridge bridge--left"><span>5 +</span>${slot('LEFT_BRIDGE')}<span>= 48</span></div>
-            <div class="seal-mark">✦</div>
-            <div class="bridge bridge--right"><span>62 −</span>${slot('RIGHT_BRIDGE')}<span>= 3</span></div>
-            ${block('BL', { north: '+ 48 =', east: '÷ 2 =', south: '− 6 =', west: '+ 18 =' })}
-            <div class="bridge bridge--bottom"><span>2 +</span>${slot('BOTTOM_BRIDGE')}<span>= 14</span></div>
-            ${block('BR', { north: '× 3 =', east: '÷ 2 =', south: '− 1 =', west: '+ 14 =' })}
-          </div>
+          <img src="${A}game1_math_seal.svg" alt="Математическая печать с точными выражениями" class="crossword-parchment">
+          <div class="crossword-zones">${sealSlots.map(([id, x, y]) => `<span class="crossword-zone" style="--x:${x}%;--y:${y}%">${slot(id)}</span>`).join('')}</div>
         </div>
         <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
         <aside class="crossword-inventory"><h2>Инвентарь свитков</h2><div class="scroll-grid">${available.map((number) => scroll(number, `available ${selected === number ? 'is-selected' : ''}`)).join('')}</div></aside>
+        <button type="button" class="give-up-button" data-action="give-up">Сдаться</button>
       </section>`;
     Object.entries(placed).forEach(([id, number]) => {
       const cell = container.querySelector(`[data-slot="${id}"]`);
@@ -223,6 +219,27 @@ export function mountGame1(container, api) {
         if (selected !== null) attemptDrop(cell.dataset.slot, selected);
       });
     });
+    container.querySelector('[data-action="instructions"]').addEventListener('click', () => showInstructions2(true));
+    container.querySelector('[data-action="hint"]').addEventListener('click', useHint);
+    container.querySelector('[data-action="give-up"]').addEventListener('click', () => leave(true));
+  }
+
+  function leave(shouldBlock) {
+    active = false;
+    api.returnToHall('game_01', shouldBlock);
+  }
+
+  function useHint() {
+    if (hintUsed) return;
+    const empty = sealSlots.map(([id]) => id).filter((id) => !placed[id]);
+    if (!empty.length) return;
+    const id = empty[Math.floor(Math.random() * empty.length)];
+    placed[id] = answers[id];
+    hintUsed = true;
+    selected = null;
+    playEffect('correct');
+    if (Object.keys(placed).length === 20) setTimeout(() => { if (active) showArtifact(); }, 350);
+    else renderLevel2('Подсказка открыла один знак. Попытка сохранена.');
   }
 
   function attemptDrop(id, number) {
@@ -232,7 +249,7 @@ export function mountGame1(container, api) {
       selected = null;
       playEffect('correct');
       if (Object.keys(placed).length === 20) {
-        setTimeout(showArtifact, 350);
+        setTimeout(() => { if (active) showArtifact(); }, 350);
       } else renderLevel2('Знак встал на место.');
       return;
     }

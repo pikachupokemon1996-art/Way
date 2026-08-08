@@ -1,4 +1,4 @@
-import { allGamesCompleted, chooseAlliance, completeGame, getState, resetState, setView } from './state.js';
+import { allGamesCompleted, blockGame, chooseAlliance, completeGame, getState, resetState, setView } from './state.js';
 import { initAudio, playEffect } from './audio.js';
 import { mountGame1 } from './game1.js';
 import { mountGame2 } from './game2.js';
@@ -40,9 +40,7 @@ function renderEntrance() {
     <section class="scene entrance-scene">
       <div class="entrance-focus">
         <img class="order-emblem" src="${A}order_emblem.png" alt="Эмблема Ордена">
-        <button type="button" class="image-cta" data-action="enter">
-          <img src="${A}entrance_text_frame.png" alt=""><span>Присоединиться к Ордену</span>
-        </button>
+        <button type="button" class="image-cta image-only-button" data-action="enter" aria-label="Присоединиться к Ордену"><img src="${A}entrance_join_button_full.png" alt="Присоединиться к Ордену"></button>
       </div>
     </section>`;
   app.querySelector('[data-action="enter"]').addEventListener('click', () => {
@@ -55,18 +53,16 @@ function renderHall(showRequiredChoice = false) {
   setView('hall');
   app.innerHTML = `
     <section class="scene hall-scene">
-      <header class="hall-copy image-frame">
-        <img src="${A}hall_text_frame.png" alt="">
-        <div><h1>Выбери хранителя, который будет помогать тебе преодолевать трудности.</h1>
-        <p class="warning-text">Выбрать можно только одного хранителя. Делай выбор с умом.</p>
-        <p>Ты можешь сначала пройти испытания и узнать каждый путь.</p></div>
-      </header>
+      <header class="hall-banner"><img src="${A}hall_choose_guardian_banner.png" alt="Выбери хранителя"></header>
       <div class="doors" aria-label="Три пути Ордена">
         ${door('game_01', 'door_symbol_coins.png')}
         ${door('game_02', 'door_symbol_agriculture.png')}
         ${door('game_03', 'door_symbol_bells.png')}
       </div>
-      <div class="leave-area"><span>Если ты ещё не готов принять вызов, можешь уйти.</span><button type="button" class="text-button" data-action="leave">Уйти</button></div>
+      <footer class="hall-footer">
+        <div class="hall-notes"><p class="warning-text">Выбрать можно только одного хранителя. Делай выбор с умом.</p><p>Ты можешь сначала пройти испытания и узнать каждый путь.</p><p>Если ты ещё не готов принять вызов, можешь уйти.</p></div>
+        <button type="button" class="hall-leave image-only-button" data-action="leave" aria-label="Уйти"><img src="${A}hall_leave_button_full.png" alt="Уйти"></button>
+      </footer>
     </section>`;
   app.querySelectorAll('[data-game]').forEach((button) => button.addEventListener('click', () => selectGame(button.dataset.game)));
   app.querySelector('[data-action="leave"]').addEventListener('click', () => {
@@ -78,10 +74,11 @@ function renderHall(showRequiredChoice = false) {
 
 function door(gameId, symbol) {
   const completed = getState().completed[gameId];
-  return `<button type="button" class="hall-door ${completed ? 'is-completed' : ''}" data-game="${gameId}">
+  const blocked = getState().blocked[gameId];
+  return `<button type="button" class="hall-door ${completed ? 'is-completed' : ''} ${blocked ? 'is-blocked' : ''}" data-game="${gameId}" ${blocked ? 'disabled' : ''}>
     <img class="door-symbol" src="${A}${symbol}" alt="">
     <span class="door-label"><img src="${A}door_label_frame.png" alt=""><strong>${names[gameId]}</strong></span>
-    ${completed ? '<span class="completed-mark">Испытание пройдено</span>' : ''}
+    ${completed ? '<span class="completed-mark">Испытание пройдено</span>' : ''}${blocked ? '<span class="blocked-mark">Путь закрыт до перезагрузки</span>' : ''}
   </button>`;
 }
 
@@ -104,6 +101,10 @@ function selectGame(gameId) {
 function gameApi() {
   return {
     modal,
+    returnToHall(gameId, shouldBlock = false) {
+      if (shouldBlock) blockGame(gameId);
+      renderHall();
+    },
     finish(gameId, accepted) {
       completeGame(gameId);
       if (accepted) {
