@@ -191,7 +191,7 @@ p { line-height: 1.5; }
 .task-frame strong { display: block; font-size: 2.35rem; line-height: 1; }
 .abacus { position: relative; width: min(900px, 67vw); height: 340px; margin: -10px auto -22px; }
 .abacus__body { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 20px 22px #000a); }
-.abacus__rows { position: absolute; top: 104px; right: 15%; left: 10%; display: grid; gap: 24px; transform: translateX(14px); }
+.abacus__rows { position: absolute; top: 104px; right: 15%; left: 10%; display: grid; gap: 24px; transform: translateX(42px); }
 .bead-row { display: flex; height: 56px; align-items: center; justify-content: flex-end; gap: 2px; padding: 0 6px; }
 .bead { width: 8.7%; height: 58px; border: 0; padding: 0; cursor: pointer; background: transparent; transition: transform .22s ease, filter .2s; }
 .bead img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; transform: rotate(90deg); }
