@@ -33,15 +33,15 @@ function scroll(number, extra = '') {
 }
 
 function slot(id) {
-  return `<button type="button" class="crossword-slot" data-slot="${id}" aria-label="Пустая клетка ${id}">?</button>`;
+  return `<button type="button" class="crossword-slot" data-slot="${id}" aria-label="Пустая клетка ${id}"></button>`;
 }
 
 const sealSlots = [
-  ['TL_NW', 13.75, 17.65], ['TL_NE', 34.58, 17.65], ['TL_SE', 34.58, 44.12], ['TL_SW', 13.75, 44.12],
-  ['TR_NW', 65.42, 17.65], ['TR_NE', 86.25, 17.65], ['TR_SE', 86.25, 44.12], ['TR_SW', 65.42, 44.12],
-  ['BL_NW', 13.75, 55.88], ['BL_NE', 34.58, 55.88], ['BL_SE', 34.58, 82.35], ['BL_SW', 13.75, 82.35],
-  ['BR_NW', 65.42, 55.88], ['BR_NE', 86.25, 55.88], ['BR_SE', 86.25, 82.35], ['BR_SW', 65.42, 82.35],
-  ['TOP_BRIDGE', 50, 30.88], ['RIGHT_BRIDGE', 75.83, 50], ['BOTTOM_BRIDGE', 50, 69.12], ['LEFT_BRIDGE', 24.17, 50],
+  ['TL_NW', 12.40, 10.36], ['TL_NE', 33.11, 10.36], ['TL_SE', 33.11, 36.14], ['TL_SW', 12.40, 36.14],
+  ['TR_NW', 66.44, 10.36], ['TR_NE', 87.19, 10.36], ['TR_SE', 87.19, 36.14], ['TR_SW', 66.44, 36.14],
+  ['BL_NW', 12.40, 62.29], ['BL_NE', 33.11, 62.29], ['BL_SE', 33.11, 86.88], ['BL_SW', 12.40, 86.88],
+  ['BR_NW', 66.44, 62.29], ['BR_NE', 87.19, 62.29], ['BR_SE', 87.19, 86.88], ['BR_SW', 66.44, 86.88],
+  ['TOP_BRIDGE', 49.72, 23.39], ['RIGHT_BRIDGE', 76.69, 52.35], ['BOTTOM_BRIDGE', 49.72, 74.63], ['LEFT_BRIDGE', 22.82, 52.35],
 ];
 
 export function mountGame1(container, api) {
@@ -183,12 +183,12 @@ export function mountGame1(container, api) {
         <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact" data-action="hint" ${hintUsed ? 'disabled' : ''}>Подсказка</button></div>
         <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Математическая печать</h1></div><div class="life-coins" aria-label="Осталось попыток: ${lives}">${Array.from({ length: 5 }, (_, index) => `<span class="life-coin ${index < lives ? 'is-active' : ''}" aria-hidden="true">◇</span>`).join('')}</div></header>
         <div class="crossword-shell">
-          <img src="${A}game1_math_seal.svg" alt="Математическая печать с точными выражениями" class="crossword-parchment">
+          <img src="${A}game1_math_crossword_v2.png" alt="Математический кроссворд с двадцатью пустыми ячейками" class="crossword-parchment">
           <div class="crossword-zones">${sealSlots.map(([id, x, y]) => `<span class="crossword-zone" style="--x:${x}%;--y:${y}%">${slot(id)}</span>`).join('')}</div>
         </div>
         <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
         <aside class="crossword-inventory"><h2>Инвентарь свитков</h2><div class="scroll-grid">${available.map((number) => scroll(number, `available ${selected === number ? 'is-selected' : ''}`)).join('')}</div></aside>
-        <button type="button" class="give-up-button" data-action="give-up">Сдаться</button>
+        <button type="button" class="secondary-button compact give-up-button" data-action="give-up">Отказаться от испытания</button>
       </section>`;
     Object.entries(placed).forEach(([id, number]) => {
       const cell = container.querySelector(`[data-slot="${id}"]`);

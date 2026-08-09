@@ -170,8 +170,8 @@ p { line-height: 1.5; }
 .attempts, .progress-chip { border: 1px solid #b88a4d; border-radius: 999px; padding: .65rem 1rem; color: #f5dfb0; box-shadow: 0 5px 16px #0007; background: #28180edb; }
 .game-header > .progress-chip, .game-header > .shape-progress { position: absolute; left: calc(50% + 250px); top: 5px; }
 .corner-controls { position: fixed; z-index: 12; top: 78px; display: grid; gap: 7px; }.corner-controls--left { left: 24px; }
-.level-return-button, .give-up-button { position: fixed; z-index: 12; right: 25px; border: 0; padding: .5rem .8rem; color: #f4deb1; font: 700 .88rem Georgia,serif; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; background: #21140dcf; }
-.level-return-button { bottom: 22px; }.give-up-button { bottom: 136px; color: #ffd3b5; }
+.level-return-button { position: fixed; z-index: 12; right: 25px; bottom: 22px; border: 0; padding: .5rem .8rem; color: #f4deb1; font: 700 .88rem Georgia,serif; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; background: #21140dcf; }
+.give-up-button { position: fixed; z-index: 12; right: 25px; bottom: 178px; border-color: #ae7054; color: #ffe2ca; background: linear-gradient(#804837, #49271f); }
 .game-intro { display: grid; place-items: center; }
 .intro-panel { width: min(720px, 70vw); padding: 34px 52px; text-align: center; }
 .intro-panel h1 { font-size: 2.7rem; }
@@ -212,13 +212,15 @@ p { line-height: 1.5; }
 @keyframes pop-in { from { opacity: 0; transform: translate(-50%, 14px) scale(.96); } }
 
 .game1-level2 { padding-bottom: 150px; }
-.crossword-shell { position: relative; width: min(1000px, 75vw); aspect-ratio: 1200 / 680; margin: -8px auto 0; }
+.crossword-shell { position: relative; width: min(900px, 68vw, calc((100vh - 230px) * 4 / 3)); aspect-ratio: 4 / 3; margin: -8px auto 0; }
 .crossword-parchment { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 18px 25px #0009); }
 .crossword-zones { position: absolute; inset: 0; }
 .crossword-zone { position: absolute; top: var(--y); left: var(--x); transform: translate(-50%, -50%); }
-.crossword-slot { display: grid; width: 52px; height: 52px; place-items: center; border: 2px solid #8b5a2b; border-radius: 8px; color: #472915; font-weight: 700; cursor: pointer; background: rgb(244 223 180 / 72%); box-shadow: inset 0 0 7px #7f542844; }
-.crossword-slot:hover { background: #fff0c8; }
-.crossword-slot.is-filled { color: #e9f6d7; background: #36583d; cursor: default; }
+.crossword-slot { display: grid; width: 64px; height: 42px; place-items: center; border: 0; border-radius: 7px; color: #472915; font-size: 1.05rem; font-weight: 700; cursor: pointer; background: transparent; }
+.crossword-slot[data-slot="TOP_BRIDGE"], .crossword-slot[data-slot="BOTTOM_BRIDGE"] { width: 62px; }
+.crossword-slot[data-slot="LEFT_BRIDGE"], .crossword-slot[data-slot="RIGHT_BRIDGE"] { width: 46px; height: 38px; }
+.crossword-slot:hover { box-shadow: inset 0 0 0 2px #d5a652, 0 0 12px #ffe6a05c; background: rgb(255 230 174 / 30%); }
+.crossword-slot.is-filled { color: #f5e7bd; box-shadow: inset 0 0 0 2px #91ab7b, 0 0 12px #b9d49566; background: rgb(50 83 60 / 90%); cursor: default; }
 .crossword-inventory { position: fixed; z-index: 4; right: 24px; bottom: 20px; left: 24px; border: 1px solid #9f7748; border-radius: 12px; padding: 10px 18px; box-shadow: 0 9px 28px #000a; background: #22150ee8; }
 .crossword-inventory .scroll-grid { grid-template-columns: repeat(20, minmax(35px, 1fr)); }
 .crossword-inventory .number-scroll { height: 76px; aspect-ratio: auto; font-size: 1rem; }

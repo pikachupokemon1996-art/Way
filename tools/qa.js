@@ -84,7 +84,7 @@ const game1Source = read('js/game1.js');
 const game2Source = read('js/game2.js');
 const game3Source = read('js/game3.js');
 const cssSource = read('css/styles.css');
-const sealSource = read('assets/generated/game1_math_seal.svg');
+const crosswordImage = path.join(root, 'assets', 'generated', 'game1_math_crossword_v2.png');
 
 for (const asset of ['entrance_join_button_full.png', 'hall_choose_guardian_banner.png', 'hall_leave_button_full.png']) {
   const file = path.join(root, 'assets', 'generated', asset);
@@ -100,7 +100,8 @@ check(!stateSource.includes('localStorage') && appSource.includes('blockGame(gam
 check(appSource.includes("blocked ? 'disabled' : ''"), 'blocked door is disabled');
 
 check((game1Source.match(/\['(?:TL|TR|BL|BR|TOP|RIGHT|BOTTOM|LEFT)[A-Z_]*'/g) || []).length >= 20, 'game1 has 20 seal slot definitions');
-check(game1Source.includes('game1_math_seal.svg') && sealSource.includes('2 +') && sealSource.includes('= 14'), 'game1 exact static SVG seal is connected');
+check(game1Source.includes('game1_math_crossword_v2.png') && fs.existsSync(crosswordImage), 'game1 illustrated crossword is connected');
+check(game1Source.includes('Отказаться от испытания') && cssSource.includes('bottom: 178px'), 'game1 refusal button is renamed and raised');
 check(game1Source.includes('Array.from({ length: 5 }') && game1Source.includes('life-coin'), 'game1 renders five attempt coins');
 check(game1Source.includes("data-action=\"hint\"") && game1Source.includes('Math.floor(Math.random() * empty.length)'), 'game1 one random hint');
 check(game1Source.includes('leave(false)') && game1Source.includes('leave(true)') && game1Source.includes("api.returnToHall('game_01', shouldBlock)"), 'game1 return and surrender behaviors');

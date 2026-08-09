@@ -1,6 +1,6 @@
 import { allGamesCompleted, blockGame, chooseAlliance, completeGame, getState, resetState, setView } from './state.js';
 import { initAudio, playEffect } from './audio.js';
-import { mountGame1 } from './game1.js';
+import { mountGame1 } from './game1.js?v=crossword-v2';
 import { mountGame2 } from './game2.js';
 import { mountGame3 } from './game3.js';
 
