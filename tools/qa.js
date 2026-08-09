@@ -122,6 +122,7 @@ check(overrides.game3.level1.tasks.every((task) => game3Source.includes(task.ins
 check(game3Source.includes("'ЗОЛОТОЙ' : 'НЕФРИТОВЫЙ'"), 'game3 Russian bell labels');
 check(!game3Source.includes('melody-progress') && !game3Source.includes('Нота ${taskIndex'), 'game3 removed old note progress UI');
 check(game3Source.includes('note-progress') && game3Source.includes('leave(true)') && game3Source.includes("api.returnToHall('game_03', shouldBlock)"), 'game3 top notes and refusal behavior');
+check(game3Source.includes('secondary-button compact card-return-button') && game3Source.includes('secondary-button compact refusal-button'), 'game3 level buttons use the requested styles');
 check(game3Source.includes('playMelody(level2Tasks.map'), 'game3 final six-note melody');
 
 for (const file of ['index.html', 'css/styles.css', 'js/app.js', 'js/audio.js', 'js/state.js', 'js/game1.js', 'js/game2.js', 'js/game3.js']) {

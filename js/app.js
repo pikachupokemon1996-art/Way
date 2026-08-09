@@ -2,7 +2,7 @@ import { allGamesCompleted, blockGame, chooseAlliance, completeGame, getState, r
 import { initAudio, playEffect } from './audio.js';
 import { mountGame1 } from './game1.js?v=crossword-v2';
 import { mountGame2 } from './game2.js?v=farm-images-v2';
-import { mountGame3 } from './game3.js';
+import { mountGame3 } from './game3.js?v=game3-buttons-v2';
 
 const app = document.querySelector('#app');
 const modalRoot = document.querySelector('#modal-root');

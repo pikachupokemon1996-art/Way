@@ -81,7 +81,7 @@ export function mountGame3(container, api) {
         </div>
         <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
         ${lessonShown ? '<p class="lesson-note">Вероятность говорит о шансе, а не предсказывает будущее.</p>' : ''}
-        <button type="button" class="level-return-button" data-action="return">Вернуться в главный зал</button>
+        <button type="button" class="secondary-button compact card-return-button" data-action="return">Вернуться в главный зал</button>
       </section>`;
     container.querySelectorAll('[data-bell]').forEach((button) => button.addEventListener('click', () => toggleBell(Number(button.dataset.bell))));
     container.querySelector('[data-action="check"]').addEventListener('click', checkSetup);
@@ -157,7 +157,7 @@ export function mountGame3(container, api) {
     const task = level2Tasks[taskIndex];
     container.innerHTML = `
       <section class="scene game-scene game3-scene game3-level2">
-        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact" data-action="give-up">Отказаться от испытания</button></div>
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact refusal-button" data-action="give-up">Отказаться от испытания</button></div>
         <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Услышь закономерность</h1></div><div class="note-progress" aria-label="Собрано нот">${Array.from({ length: 6 }, (_, index) => `<span class="${index < taskIndex ? 'is-played' : ''}">♪</span>`).join('')}</div></header>
         <div class="bell-question"><h2>Какова вероятность золотого звона?</h2>${bellsMarkup(task.bells, -1, false)}</div>
         ${dialMarkup()}
