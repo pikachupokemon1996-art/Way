@@ -109,10 +109,13 @@ check(cssSource.includes('transform: rotate(90deg)') && cssSource.includes('.scr
 
 check(overrides.game2.level2.tasks.every((task) => game2Source.includes(task.text)), 'game2 exact patched task texts');
 check(overrides.game2.level2.tasks.every((task) => task.options.every((option) => game2Source.includes(option))), 'game2 options preserved');
-check(['fence', 'grass', 'border', 'seedlings', 'bushes', 'rope'].every((kind) => game2Source.includes(`farm-improvement--${kind}`)), 'game2 six distinct farm improvements');
+const farmAssets = ['boards', 'cut_grass', 'stones', 'seedlings', 'bush', 'rope'];
+check(farmAssets.every((kind) => game2Source.includes(`game2_farm_${kind}.png`)), 'game2 uses six illustrated farm improvements');
+check(farmAssets.every((kind) => fs.readFileSync(path.join(root, 'assets', 'generated', `game2_farm_${kind}.png`))[25] === 6), 'game2 farm improvements have alpha channels');
 check(game2Source.includes('progressGroups') && game2Source.includes('shape-progress'), 'game2 geometry progress icons');
 check(game2Source.includes('shuffleCards(order)') && game2Source.includes('Math.random()'), 'game2 cards are shuffled for each run');
 check(game2Source.includes('showCardsInstructions(true)') && game2Source.includes('card-return-button') && cssSource.includes('.game2-card-feedback'), 'game2 card controls and feedback stay visible');
+check(game2Source.includes('refusal-button') && cssSource.includes('.refusal-button'), 'game2 refusal button uses red-brown styling');
 check(game2Source.includes('leave(false)') && game2Source.includes('leave(true)') && game2Source.includes("api.returnToHall('game_02', shouldBlock)"), 'game2 return and refusal behaviors');
 
 check(overrides.game3.level1.tasks.every((task) => game3Source.includes(task.instruction)), 'game3 exact probability instructions');

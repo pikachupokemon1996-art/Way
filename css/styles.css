@@ -246,18 +246,19 @@ p { line-height: 1.5; }
 .game2-card-feedback:not(.is-visible) { visibility: hidden; }
 .shape-progress { display: flex; align-items: center; gap: 7px; border: 1px solid #b88a4d; border-radius: 999px; padding: .55rem .8rem; background: #28180edb; }.shape-progress span { display: block; width: 22px; height: 22px; border: 2px solid #8a795e; background: #17100bc7; }.shape-progress__rectangle { width: 32px !important; }.shape-progress span.is-found { border-color: #e8ca6d; box-shadow: 0 0 12px #ffe181; background: #5a9870; }.shape-progress small { color: #f2dca7; }
 .game2-farm { display: block; background-image: url('../assets/generated/game2_farm_background.webp'); }
+.refusal-button { border-color: #ae7054; color: #ffe2ca; background: linear-gradient(#804837, #49271f); }
 .farm-task { position: absolute; z-index: 5; right: 4vw; bottom: 5vh; width: 520px; padding: 25px 30px; }
 .farm-task p { margin-bottom: .45rem; }.farm-task h2 { font-size: 1.2rem; line-height: 1.35; }
 .answer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .answer-button { min-height: 44px; padding: .55rem; }
-.farm-improvement { position: absolute; display: block; opacity: 0; filter: drop-shadow(0 8px 8px #0007); transform: scale(.4); transition: .45s ease; }
+.farm-improvement { position: absolute; display: block; width: 220px; height: 145px; object-fit: contain; opacity: 0; filter: drop-shadow(0 8px 8px #0007); transform: scale(.4); transition: .45s ease; }
 .farm-improvement.is-grown { opacity: 1; transform: scale(1); }
-.farm-improvement--fence { top: 39%; left: 24%; width: 190px; height: 95px; border: 10px ridge #78502d; border-radius: 8px; }
-.farm-improvement--grass { top: 43%; left: 50%; width: 150px; height: 70px; background: repeating-linear-gradient(75deg, transparent 0 8px, #49793f 9px 13px, transparent 14px 20px); }
-.farm-improvement--border { top: 57%; left: 24%; width: 190px; height: 92px; border: 13px solid #7d6a50; border-radius: 20px; }
-.farm-improvement--seedlings { top: 58%; left: 50%; width: 150px; height: 76px; background: repeating-linear-gradient(90deg, transparent 0 13px, #487240 14px 19px, transparent 20px 30px); border-bottom: 9px solid #342514; }
-.farm-improvement--bushes { top: 74%; left: 24%; width: 180px; height: 82px; background: radial-gradient(circle at 18% 55%,#477441 0 25px,transparent 27px),radial-gradient(circle at 50% 38%,#5a8b4b 0 30px,transparent 32px),radial-gradient(circle at 82% 58%,#3f6b39 0 27px,transparent 29px); }
-.farm-improvement--rope { top: 75%; left: 50%; width: 175px; height: 84px; border: 7px dashed #c5a15e; border-radius: 15px; }
+.farm-improvement--boards { top: 35%; left: 22%; width: 245px; }
+.farm-improvement--cut-grass { top: 39%; left: 48%; width: 245px; }
+.farm-improvement--stones { top: 54%; left: 22%; width: 230px; }
+.farm-improvement--seedlings { top: 55%; left: 48%; width: 230px; height: 160px; }
+.farm-improvement--bush { top: 70%; left: 23%; width: 205px; height: 165px; }
+.farm-improvement--rope { top: 72%; left: 49%; width: 205px; }
 
 /* Game 3 */
 .game3-level1, .game3-level2 { text-align: center; }

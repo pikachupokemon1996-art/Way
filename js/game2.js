@@ -164,15 +164,15 @@ export function mountGame2(container, api) {
     const item = questions[questionIndex];
     container.innerHTML = `
       <section class="scene game-scene game2-farm">
-        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact" data-action="give-up">Отказаться от испытания</button></div>
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button><button class="secondary-button compact refusal-button" data-action="give-up">Отказаться от испытания</button></div>
         <header class="game-header"><div><p class="eyebrow">Уровень 2 · испытание</p><h1>Помоги на участке</h1></div><span class="progress-chip">Задача ${questionIndex + 1}/6</span></header>
         <div class="farm-improvements" aria-label="Улучшения хозяйства">
-          <span class="farm-improvement farm-improvement--fence ${progress >= 1 ? 'is-grown' : ''}" aria-label="Ограда"></span>
-          <span class="farm-improvement farm-improvement--grass ${progress >= 2 ? 'is-grown' : ''}" aria-label="Созревшая зелень"></span>
-          <span class="farm-improvement farm-improvement--border ${progress >= 3 ? 'is-grown' : ''}" aria-label="Бортик"></span>
-          <span class="farm-improvement farm-improvement--seedlings ${progress >= 4 ? 'is-grown' : ''}" aria-label="Подросшая рассада"></span>
-          <span class="farm-improvement farm-improvement--bushes ${progress >= 5 ? 'is-grown' : ''}" aria-label="Кусты"></span>
-          <span class="farm-improvement farm-improvement--rope ${progress >= 6 ? 'is-grown' : ''}" aria-label="Верёвочная ограда"></span>
+          <img class="farm-improvement farm-improvement--boards ${progress >= 1 ? 'is-grown' : ''}" src="${A}game2_farm_boards.png" alt="Кучка досок">
+          <img class="farm-improvement farm-improvement--cut-grass ${progress >= 2 ? 'is-grown' : ''}" src="${A}game2_farm_cut_grass.png" alt="Скошенная трава">
+          <img class="farm-improvement farm-improvement--stones ${progress >= 3 ? 'is-grown' : ''}" src="${A}game2_farm_stones.png" alt="Кучка камней">
+          <img class="farm-improvement farm-improvement--seedlings ${progress >= 4 ? 'is-grown' : ''}" src="${A}game2_farm_seedlings.png" alt="Рассада">
+          <img class="farm-improvement farm-improvement--bush ${progress >= 5 ? 'is-grown' : ''}" src="${A}game2_farm_bush.png" alt="Куст">
+          <img class="farm-improvement farm-improvement--rope ${progress >= 6 ? 'is-grown' : ''}" src="${A}game2_farm_rope.png" alt="Моток верёвки">
         </div>
         <div class="ornate-panel farm-task">
           <h2>${item.text}</h2>
