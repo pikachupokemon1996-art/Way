@@ -30,6 +30,7 @@ const progressGroups = [
 
 export function mountGame2(container, api) {
   let active = true;
+  let cardOrder = [];
   let opened = [];
   let matched = new Set();
   let busy = false;
@@ -47,15 +48,29 @@ export function mountGame2(container, api) {
       </div></section>`;
     container.querySelector('[data-action="start"]').addEventListener('click', () => {
       playEffect('click');
-      api.modal({
-        title: 'Собери тройку',
-        body: '<p>Открывай по три карточки. Найди четыре тройки: <strong>картинка, объяснение и формула</strong>.</p><p>На этом этапе можно ошибаться сколько угодно.</p>',
-        actions: [{ label: 'Начать', primary: true, onClick: startCards }],
-      });
+      showCardsInstructions();
     });
   }
 
+  function showCardsInstructions(continueCurrent = false) {
+    api.modal({
+      title: 'Собери тройку',
+      body: '<p>Открывай по три карточки. Найди четыре тройки: <strong>картинка, объяснение и формула</strong>.</p><p>На этом этапе можно ошибаться сколько угодно.</p>',
+      actions: [{ label: continueCurrent ? 'Продолжить' : 'Начать', primary: true, onClick: continueCurrent ? () => renderCards() : startCards }],
+    });
+  }
+
+  function shuffleCards(source) {
+    const shuffled = [...source];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+    }
+    return shuffled;
+  }
+
   function startCards() {
+    cardOrder = shuffleCards(order);
     opened = [];
     matched = new Set();
     busy = false;
@@ -72,9 +87,10 @@ export function mountGame2(container, api) {
   function renderCards(message = '') {
     container.innerHTML = `
       <section class="scene game-scene game2-scene game2-cards">
+        <div class="corner-controls corner-controls--left"><button class="secondary-button compact" data-action="instructions">Инструкция</button></div>
         <header class="game-header"><div><p class="eyebrow">Уровень 1 · обучение</p><h1>Собери тройку</h1></div><div class="shape-progress" aria-label="Найдено ${matched.size} из 4">${progressGroups.map(([group, shape]) => `<span class="shape-progress__${shape} ${matched.has(group) ? 'is-found' : ''}"></span>`).join('')}<small>${matched.size}/4</small></div></header>
         <div class="card-grid" aria-label="12 карточек">
-          ${order.map((id) => {
+          ${cardOrder.map((id) => {
             const isOpen = opened.includes(id) || matched.has(cards[id].group);
             const isMatched = matched.has(cards[id].group);
             return `<button type="button" class="learning-card ${isOpen ? 'is-open' : ''} ${isMatched ? 'is-matched' : ''}" data-card="${id}" ${isMatched ? 'disabled' : ''}>
@@ -83,10 +99,11 @@ export function mountGame2(container, api) {
             </button>`;
           }).join('')}
         </div>
-        <p class="feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
-        <button type="button" class="level-return-button" data-action="return">Вернуться в главный зал</button>
+        <p class="feedback game2-card-feedback ${message ? 'is-visible' : ''}" role="status">${message}</p>
+        <button type="button" class="secondary-button compact card-return-button" data-action="return">Вернуться в главный зал</button>
       </section>`;
     container.querySelectorAll('.learning-card:not(:disabled)').forEach((element) => element.addEventListener('click', () => openCard(element.dataset.card)));
+    container.querySelector('[data-action="instructions"]').addEventListener('click', () => showCardsInstructions(true));
     container.querySelector('[data-action="return"]').addEventListener('click', () => leave(false));
   }
 

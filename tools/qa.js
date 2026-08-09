@@ -111,6 +111,8 @@ check(overrides.game2.level2.tasks.every((task) => game2Source.includes(task.tex
 check(overrides.game2.level2.tasks.every((task) => task.options.every((option) => game2Source.includes(option))), 'game2 options preserved');
 check(['fence', 'grass', 'border', 'seedlings', 'bushes', 'rope'].every((kind) => game2Source.includes(`farm-improvement--${kind}`)), 'game2 six distinct farm improvements');
 check(game2Source.includes('progressGroups') && game2Source.includes('shape-progress'), 'game2 geometry progress icons');
+check(game2Source.includes('shuffleCards(order)') && game2Source.includes('Math.random()'), 'game2 cards are shuffled for each run');
+check(game2Source.includes('showCardsInstructions(true)') && game2Source.includes('card-return-button') && cssSource.includes('.game2-card-feedback'), 'game2 card controls and feedback stay visible');
 check(game2Source.includes('leave(false)') && game2Source.includes('leave(true)') && game2Source.includes("api.returnToHall('game_02', shouldBlock)"), 'game2 return and refusal behaviors');
 
 check(overrides.game3.level1.tasks.every((task) => game3Source.includes(task.instruction)), 'game3 exact probability instructions');
